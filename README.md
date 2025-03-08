@@ -38,7 +38,7 @@ node artisan serve 8080
 3. 安装 nginx 配置 SSL 证书，或使用 cloudflare 保护您的应用安全。
 
 # 验证器
-kmola 提供了一个简单的身份验证和权限验证器，若要在 `user` 模型完成一个有效的登录和权限功能，请按以下步骤操作。
+kmola 提供了一个简单的验证器，若要在 `user` 模型完成一个有效的登录授权功能，请按以下步骤操作。
 
 ## 第一步 为模型绑定验证器
 ```
@@ -59,8 +59,10 @@ module.exports = {
     visible: ['id', 'roles', 'username', 'nickname'], // 会话存储的模型数据
     permissions: {
         user: [ //该角色拥有的权限
-            // path 访问的 URI methods 请求方法 type 访问规则 允许=allow 不允许=disallow
             { path: "/user/.*", methods: "any", type: "allow" }
+            //path 为访问的路由，支持正则 `/user/.*` 表示允许 /user/ 开头的所请求
+            //methods 为 get,put,post,patch,delete,del 表示允许的路由方法 any 为全部
+            //type 权限类型 allow 表示允许访问，disallow 表示不允许访问
         ]
     }
 };
