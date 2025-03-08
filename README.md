@@ -61,7 +61,7 @@ module.exports = {
         user: [ //该角色拥有的权限
             { path: "/user/.*", methods: "any", type: "allow" }
             //path 为访问的路由，支持正则 `/user/.*` 表示允许 /user/ 开头的所请求
-            //methods 为 get,put,post,patch,delete,del 表示允许的路由方法 any 为全部
+            //methods 为 get,put,post,patch,delete 表示允许的路由方法 any 为全部
             //type 权限类型 allow 表示允许访问，disallow 表示不允许访问
         ]
     }
