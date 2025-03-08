@@ -6,9 +6,15 @@
 Kmola 是一个 Koa MVC 框架，深受 Laravel 框架的启发，使用方式几乎相同。具有小巧快速的特性，可以让您轻松优雅的开发。Kmola 提供了丰富的 CLI 功能，通过命令行脚手架 1 分钟即可生成 CURD 功能。
 
 # 开始
-Linux 和 MacOS 请在控制台中执行，Windows 请在（WSL2）中执行。
+你可以使用一个简单的终端命令来创建一个新的 kmola 项目。 
+例如要创建一个名为「example-app」的项目，你可以在终端中运行以下命令（Windows 请在`WSL2`中执行）
 ```
 curl -s "https://raw.githubusercontent.com/tmkook/kmola/refs/heads/main/shell/install.sh" | bash -s example-app
+```
+或者手创建 example-app 目录并执行以下命令。默认数据库驱动为 sqlite3 你也可以修改为其他数据库驱动。
+支持的数据库驱动: `pg` `sqlite3` `better-sqlite3` `mysql` `mysql2` `tedious`
+```
+npm install kmola sutando sqlite3 -d | cp -rf node_modules/kmola/framework/* ./
 ```
 
 # 启动
