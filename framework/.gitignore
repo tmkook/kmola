@@ -1,0 +1,9 @@
+.env
+.DS_Store
+/node_modules
+/public/amis
+/public/assets
+/public/uploads
+/storage/logs/*
+/storage/stories/*
+/storage/uploads/*

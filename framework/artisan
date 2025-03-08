@@ -1,0 +1,2 @@
+const { program } = require('kmola');
+program.loader().parse();

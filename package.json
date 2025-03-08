@@ -1,0 +1,35 @@
+{
+  "name": "kmola",
+  "version": "1.0.0",
+  "author": "tmkook",
+  "license": "MIT",
+  "description": "kmola framework",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "crypto-js": "^4.2.0",
+    "ejs": "^3.1.10",
+    "koa": "^2.15.3",
+    "koa-bodyparser": "^4.4.1",
+    "koa-router": "^13.0.1",
+    "koa-session": "^6.4.0",
+    "koa-static": "^5.0.0",
+    "winston": "^3.17.0"
+  },
+  "homepage": "https://kmola.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sutandojs/sutando.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "koa",
+    "mvc",
+    "dcat",
+    "kmola",
+    "laravel",
+    "framework",
+    "laravel-admin"
+  ]
+}
