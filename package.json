@@ -15,10 +15,10 @@
     "koa-static": "^5.0.0",
     "winston": "^3.17.0"
   },
-  "homepage": "https://kmola.com/",
+  "homepage": "https://github.com/tmkook/kmola",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sutandojs/sutando.git"
+    "url": "https://github.com/tmkook/kmola.git"
   },
   "engines": {
     "node": ">=20"

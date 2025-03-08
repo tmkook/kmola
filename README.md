@@ -3,19 +3,14 @@
   <h1 align="center"><a href="https://kmola.com">Kmola-Framework</a></h1>
 </div>
 
-Kmola 是一个 Koa MVC 框架，深受 Laravel 框架的启发，使用方式几乎相同。具有小巧快速的特性，可以让您轻松优雅的开发。Kmola 提供了丰富的 CLI 功能，通过命令行脚手架 1 分钟即可生成 CURD 功能。
+Kmola 是一个基于 Koa 的 MVC 框架，深受 Laravel 框架的启发，使用方式几乎相同。具有小巧快速的特性，可以让您轻松优雅的开发。Kmola 提供了丰富的 CLI 功能，通过命令行脚手架 1 分钟即可生成 CURD 功能。
 
 # 开始
-你可以使用一个简单的终端命令来创建一个新的 kmola 项目。 
-例如要创建一个名为「example-app」的项目，你可以在终端中运行以下命令（Windows 请在`WSL2`中执行）
+例如创建一个名为「example-app」的项目，并在该目录执行命令（Windows 请在 `WSL2` 中执行）  
 ```
-curl -s "https://raw.githubusercontent.com/tmkook/kmola/refs/heads/main/shell/install.sh" | bash -s example-app
+npm i kmola sutando sqlite3 & cp -rf node_modules/kmola/framework/* ./
 ```
-或者手创建 example-app 目录并执行以下命令。默认数据库驱动为 sqlite3 你也可以修改为其他数据库驱动。
-支持的数据库驱动: `pg` `sqlite3` `better-sqlite3` `mysql` `mysql2` `tedious`
-```
-npm install kmola sutando sqlite3 -d | cp -rf node_modules/kmola/framework/* ./
-```
+数据库继承自 sutando 包，默认驱动为 sqlite3 你也可以修改为其他支持的驱动 `pg` `sqlite3` `better-sqlite3` `mysql` `mysql2` `tedious` 详细使用方法请查阅 <a href="https://github.com/sutandojs/sutando">sutando</a>
 
 # 启动
 安装完成后通过 `artisan` 命令来启动 http 服务，通常默认端口为 3000 即访问 `http://localhost:3000` 即可
@@ -26,34 +21,21 @@ node artisan --help
 // 查看 serve 命令详情
 node artisan serve --help
 
-// 启动服务
+// 启动默认端口
 node artisan serve
 
-// 启动自定义端口 8080
+// 启动自定义端口
 node artisan serve 8080
 ```
 
 # 部署
 当你准备将 kmola 应用程序部署到生产环境时，你可以做一些重要的事情来确保应用程序尽可能高效地运行。
-1. 修改 `.env` 文件中的 `APP_ENV` 选项为 `production` 生产模式，和 `APP_LOG`日志等级为 `error` 减少日志。
+1. 修改 `.env` 文件中的 `APP_ENV` 选项为 `production` 生产模式，和 `APP_LOG`日志等级为 `error` 来减少日志。
 2. 安装 PM2 管理和守护您的应用程序进程。使用方法请查阅 <a href="https://pm2.keymetrics.io/docs/usage/quick-start">PM2文档</a>
+3. 安装 nginx 配置 SSL 证书，或使用 cloudflare 保护您的应用安全。
 
 # 目录结构
-- app
-  - controllers
-  - middlewares
-  - models
-  - views
-- config
-- provider
-- public
-- resource
-  - assets
-  - locales
-  - migrations
-  - seeders
-- routes
-- storage
+默认的文件结构旨在为应用程序提供一个良好的起点。但是你可以自由地组织你的应用程序。kmola 几乎不会限制任何给定类的位置。
 
 ## app 目录
 app 目录包含应用程序核心代码，你的业务中几乎所有代码将在此目录中。
@@ -77,9 +59,6 @@ routes 目录包含应用程序的所有路由定义。默认情况下 kmola 包
 
 ## storage 目录
 storage 目录包含日志、上传、缓存、迁移及sqlite3数据库文件。
-
-## Model 模型
-Model 继承自 sutando 包，他的使用方式与 Laravel 框架的 Eloquent 几乎相同。使用方法请查阅 <a href="https://github.com/sutandojs/sutando">Sutando</a>
 
 # 请求周期
 kmola 应用程序的所有请求的入口点都是 artisan 文件。当执行一个 artisan 命令时将按如下顺序检索加载并初始化框架。

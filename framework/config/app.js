@@ -26,7 +26,7 @@ module.exports = {
         level: process.env.APP_LOG ?? 'info',
         silent: false,
         transports: [
-            { filename: process.cwd() + "/storage/logs/kola.log", maxSize: '50m', maxFiles: 7, zippedArchive: true }
+            { filename: process.cwd() + "/storage/logs/kmola.log", maxSize: '50m', maxFiles: 7, zippedArchive: true }
         ]
     },
     locale: {
