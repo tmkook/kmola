@@ -1,8 +1,7 @@
-const { context } = require('./app');
-
 module.exports = function (opt) {
     let options = {
         session: 'web',
+        rolekey: "roles",
         visible: ['id', 'roles', 'username'],
         permissions: {
             user: [
@@ -65,9 +64,9 @@ module.exports = function (opt) {
                 return context.session[options.session];
             }
 
-            static isRole(context, role, key = 'roles') {
+            static isRole(context, role) {
+                let key = options.rolekey;
                 let user = this.auth(context);
-                user.roles = 'user,vip,admin';
                 if (user && user[key]) {
                     let roles = user[key].split(',');
                     return roles.includes(role);
@@ -75,7 +74,7 @@ module.exports = function (opt) {
                 return false;
             }
 
-            static can(context, path, method, key = 'roles') {
+            static can(context, path, method) {
                 let allowed = [];
                 let denied = [];
                 if (!path) {
@@ -85,7 +84,7 @@ module.exports = function (opt) {
                     method = context.request.method;
                 }
                 for (let role in options.permissions) {
-                    if (this.isRole(context, role, key)) {
+                    if (this.isRole(context, role)) {
                         let roles = options.permissions[role];
                         for (let i in roles) {
                             let item = roles[i];

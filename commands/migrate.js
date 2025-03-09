@@ -5,43 +5,43 @@ const program = require('../program');
 async function up(step, logfile) {
     let executed = JSON.parse(folder.content(logfile, '{}'));
     let files = folder.imports(folder.base('resource/migrations'));
-    let keys = Object.keys(files);
-    let vals = Object.values(files);
-    step = step == 'all' ? keys.length : parseInt(step);
-    for (let i = 0; i < step; i++) {
-        if (!executed[keys[i]]) {
-            executed[keys[i]] = string.timestamp();
-            let migrate = new vals[i];
+    let count = step > 0 ? parseInt(step) : 'all';
+    for (let file in files) {
+        if (count && !executed[file]) {
+            executed[file] = string.timestamp();
+            let migrate = new files[file];
             await migrate.up();
-            console.log(keys[i] + ' done');
+            console.log(file + ' done.');
+            if (count > 0) count--;
         }
     }
     folder.fs.writeFileSync(logfile, JSON.stringify(executed));
-    console.log('migration up steps: ' + step + ' all executed.');
+    console.log('migration up steps: ' + step + ' executed.');
 }
 
 async function down(step, logfile) {
     let executed = JSON.parse(folder.content(logfile, '{}'));
     let files = folder.imports(folder.base('resource/migrations'));
-    let keys = Object.keys(files);
-    let vals = Object.values(files).reverse();
-    step = step == 'all' ? keys.length : parseInt(step);
-    for (let i = 0; i < step; i++) {
-        if (executed[keys[i]]) {
-            delete executed[keys[i]];
-            let migrate = new vals[i];
+    let count = step > 0 ? parseInt(step) : 'all';
+    let loged = Object.keys(executed).reverse();
+    for (let i in loged) {
+        let file = loged[i];
+        if (count) {
+            delete executed[file];
+            let migrate = new files[file];
             await migrate.down();
-            console.log(keys[i] + ' done');
+            console.log(file + ' done');
+            if (count > 0) count--;
         }
     }
     folder.fs.writeFileSync(logfile, JSON.stringify(executed));
-    console.log('migration up steps: ' + step + ' all executed.');
+    console.log('migration up steps: ' + step + ' executed.');
 }
 
 program.command('migrate')
     .description('Migration runner')
     .argument('<string>', 'up down')
-    .argument('[number]', 'Run Steps', 1)
+    .argument('[number]', 'Run Steps', 'all')
     .option('-r, --reset', 'Reset migration histories')
     .action(async (type, step, options) => {
         let logfile = folder.base('storage/stories/migrations.json');

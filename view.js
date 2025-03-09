@@ -3,6 +3,21 @@ const folder = require('./folder');
 
 module.exports = new class view {
     ejs = ejs;
+    ext = '.html';
+    path = folder.base('app/views/');
+
+    constructor(path, ext) {
+        if (path) {
+            this.path = path;
+        }
+        if (ext) {
+            this.ext = ext;
+        }
+    }
+
+    instance(path, ext) {
+        return new view(path, ext);
+    }
 
     async json(data) {
         return Promise.resolve({ type: "application/json", body: data });
@@ -35,7 +50,7 @@ module.exports = new class view {
         if (options) {
             config = Object.assign(config, options);
         }
-        let path = folder.base('app/views/' + file + '.html');
+        let path = this.path + '/' + file + this.ext;
         let html = await ejs.renderFile(path, data, config);
         return Promise.resolve({ type: "text/html", body: html });
     }
@@ -48,7 +63,8 @@ module.exports = new class view {
         if (options) {
             config = Object.assign(config, options);
         }
-        let content = folder.content(folder.base('app/views/' + file + '.html'));
+        let path = this.path + '/' + file + this.ext;
+        let content = folder.content(path);
         let html = ejs.render(content, data, config);
         return { type: "text/html", body: html };
     }
@@ -73,19 +89,5 @@ module.exports = new class view {
 
     successSync(data, code = 0) {
         return this.jsonSync({ status: code, data: data });
-    }
-
-    fileSync(file, data, options) {
-        let config = {
-            cache: true,
-            async: true,
-            filename: file
-        };
-        if (options) {
-            config = Object.assign(config, options);
-        }
-        let path = folder.base('app/views/' + file + '.html');
-        let html = ejs.render(folder.content(path), data, config);
-        return { type: "text/html", body: html };
     }
 }
