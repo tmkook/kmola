@@ -4,6 +4,8 @@ const { app, config, logger, locale } = require('kmola');
 app.prependListener('error', (stream) => {
     if (!stream.nolog) {
         logger.error(stream.stack);
+    }else{
+        console.log(stream);
     }
 });
 

@@ -3,7 +3,7 @@ module.exports = {
     rolekey: "roles",
     visible: ['id', 'roles', 'username', 'nickname'],
     permissions: {
-        admin: [
+        user: [
             { path: "/.*", methods: "any", type: "allow" }
         ]
     }
