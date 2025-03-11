@@ -55,7 +55,7 @@ router.get('/',(context) => {
 });
 ```
 
-## Action 路由
+### Action 路由
 定义一个路由，映射到 `app/controllers/welcome_controller` 的 `index` 方法。
 ```
 router.get('/',router.action('welcome','index')) //控制器名称可忽略 _controller 后缀
@@ -66,7 +66,7 @@ router.get('/',router.action('welcome','index')) //控制器名称可忽略 _con
 router.get('/',router.action('example/welcome','index'))
 ```
 
-## Resource 路由
+### Resource 路由
 kmola 的控制器基类提供了 `grid` `show` `create` `update` `form` `delete` 六个基础方法，你只需要在控制器属性中绑定模型即可定义一个 `resource` 路由。
 ```
 const {controller} = require('kmola');
@@ -86,14 +86,14 @@ router.resource('/user',router.controller('user'))
 | get | /user | {id,page,...} | grid | 获取分页 |
 | get | /user/:id | null | show | 获取一个 |
 | post | /user | {...} | create | 创建一个 |
-| put | /user:id | {...} | udpate | 修改一个 |
+| put | /user/:id | {...} | udpate | 修改一个 |
 | put | /user | {id,...} | form | 创建或修改一个 |
 | delete | /user | {id} | delete | 删除一个或多个 |
 
 # 中间件
 中间件提供了一种方便的机制来检查和过滤进入应用程序的 HTTP 请求。例如，包含一个用于验证用户是否经过身份验证。如果用户未通过身份验证，中间件将阻止访问应用。 如果用户通过了身份验证，中间件将允许请求进一步进入应用程序。
 
-## 创建中间件
+### 创建中间件
 创建一个名为 auth 的中间件。
 ```
 node artisan make:middleware auth
@@ -109,7 +109,7 @@ module.exports = async (context, next) => {
 }
 ```
 
-## 注册中间件
+### 注册中间件
 注册全局中间件，所有请求将进行身份验证。
 ```
 router.use(router.next('auth'))
@@ -152,9 +152,9 @@ module.exports = {
 ```
 const { Model, SoftDeletes, compose } = require('sutando');
 const { auth } = require('kmola'); //加载验证器
-const Authorize = auth('userauth'); //生成 userauth 配置文件的 Authorize 验证器扩展
+const Authenticate = auth('userauth'); //生成 userauth 配置文件的 Authenticate 验证器扩展
 
-module.exports = class user extends compose(Model, SoftDeletes, Authorize) { // 注册验证器
+module.exports = class user extends compose(Model, SoftDeletes, Authenticate) { // 注册验证器
   //...
 }
 ```
@@ -180,24 +180,26 @@ kmola 有多种灵活的响应，并且内置了 <a href="https://github.com/mde
 module.exports = class welcome_controller extends controller{
   index(context){
     return 'hell world'; //直接响应文本
-    context.body = 'hello world'; //koa context 响应文本
+
     return this.view.render('welcome',data,options); //EJS模板响应
     return this.view.json(data); //响应 JSON 文本
     return this.view.jsonp('callback',data); // 响应 JSONP 文本
     return this.view.error(msg,code); // 响应一个错误 JSON 结构 {status,msg}
     return this.view.success(data,code); // 响应一个成功 JSON结构 {status,data}
+
+    context.body = 'hello world'; //koa context 响应文本
   }
 }
 ```
 
 # 本地化
-kmola 内置了一个简单的翻译器，要使用本地化，请先在 `resource/locales/zh/welcome.js` 创建对应的语言包文件。
+kmola 内置了一个简单的翻译器，要使用本地化，请先创建对应的语言包 `resource/locales/zh/welcome.js` 文件。
 ```
 module.exports = {
   "hello":"你好 :world。"
 }
 ```
-在控制器使用本地化
+使用本地化
 ```
 { controller } = require('kmola')
 module.exports = class welcome_controller extends controller{
