@@ -16,10 +16,6 @@ program.command('make:controller')
             model_query = 'model = ' + model + '.query()';
         }
         let target = folder.base('app/controllers/' + name + '.js');
-        // if (!folder.fs.existsSync(target)) {
-            let stubfc = folder.root('commands/make-stubs/controller.js');
-            folder.stub(target, stubfc, { controller: name, require_model: require_model, model_query: model_query });
-        // } else {
-        //     console.log(name + ' already exists.');
-        // }
+        let stubfc = folder.root('commands/make-stubs/controller.js');
+        folder.stub(target, stubfc, { controller: name, require_model: require_model, model_query: model_query });
     });

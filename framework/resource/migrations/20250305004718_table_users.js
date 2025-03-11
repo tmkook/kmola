@@ -15,8 +15,9 @@ module.exports = class admin_users {
             table.string('username', 32);
             table.string('nickname', 32);
             table.string('password', 120);
-            table.string('avatar');
-            table.string('remark');
+            table.string('roles').nullable();
+            table.string('avatar').nullable();
+            table.string('remark').nullable();
             table.timestamps();
             table.timestamp('deleted_at').nullable();
         });

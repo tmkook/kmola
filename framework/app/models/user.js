@@ -6,7 +6,9 @@
 |
 */
 const { Model, SoftDeletes, compose } = require('sutando');
+const { auth } = require('kmola');
+const Authenticate = auth('auth');
 
-module.exports = class user extends compose(Model, SoftDeletes) {
+module.exports = class admin extends compose(Model, SoftDeletes, Authenticate) {
     hidden = ['password', 'deleted_at'];
 }
