@@ -39,9 +39,13 @@ router.action = function (file, method) {
             for (let i in response) {
                 context.response[i] = response[i];
             }
+        } else if (typeof (response) == 'string') {
+            context.response.type = 'text/plain';
+            context.response.body = response ?? '';
         } else {
-            context.tyep = 'text/plain';
-            context.body = response ?? '';
+            if (!context.response.body) {
+                context.response.body = 'No response data';
+            }
         }
     }
 }

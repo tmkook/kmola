@@ -64,6 +64,12 @@ module.exports = function (opt) {
                 return context.session[options.session];
             }
 
+            static async user(contex) {
+                let id = this.primaryKey ?? 'id';
+                let info = this.auth(contex);
+                return await this.query().where(id, info[id]);
+            }
+
             static isRole(context, role) {
                 let key = options.rolekey;
                 let user = this.auth(context);

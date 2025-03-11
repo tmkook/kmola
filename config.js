@@ -50,28 +50,4 @@ module.exports = new class config {
         data[last] = value;
         return configuration;
     }
-
-    /**
-    * 追加列表
-    * @param {string} key 
-    * @param {any} value 
-    * @returns {json}
-    */
-    append(key, value) {
-        let data = configuration;
-        let keys = key.split('.');
-        let last = keys.pop();
-        for (let i in keys) {
-            if (data[keys[i]] === undefined) {
-                data[keys[i]] = {};
-            }
-            data = data[keys[i]];
-        }
-        if (data[last]) {
-            data[last].push(value);
-        } else {
-            data[last] = [value];
-        }
-        return configuration;
-    }
 }
