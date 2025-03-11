@@ -20,10 +20,22 @@ module.exports = function (opt) {
 
     return function (Model) {
         return class extends Model {
+
+            /**
+             * 获取验证器配置
+             * @returns {json}
+             */
             static getOption() {
                 return options;
             }
 
+            /**
+             * 设置登录
+             * @param {object} context 
+             * @param {model} user 
+             * @param {bool} remember 
+             * @returns {bool}
+             */
             static login(context, user, remember = false) {
                 context.assert(user instanceof this, 'user invalid', 500);
                 user.setVisible(options.visible);
@@ -38,12 +50,21 @@ module.exports = function (opt) {
                 return true;
             }
 
+            /**
+             * 退出登录
+             * @param {object} context 
+             */
             static logout(context) {
                 context.session[options.session] = null;
                 delete context.session[options.session];
                 context.cookies.set(options.session + '.token', '', { signed: true, maxAge: -1 })
             }
 
+            /**
+             * 获取登录信息
+             * @param {object} context 
+             * @returns 
+             */
             static auth(context) {
                 if (!context.session[options.session]) {
                     let cookie = context.cookies.get(options.session + '.token', { signed: true });
@@ -64,6 +85,12 @@ module.exports = function (opt) {
                 return context.session[options.session];
             }
 
+            /**
+             * 是否有角色
+             * @param {*} context 
+             * @param {*} role 
+             * @returns 
+             */
             static isRole(context, role) {
                 let key = options.rolekey;
                 let user = this.auth(context);
@@ -74,6 +101,13 @@ module.exports = function (opt) {
                 return false;
             }
 
+            /**
+             * 是否有权限
+             * @param {object} context 
+             * @param {string} path 
+             * @param {string} method 
+             * @returns {bool}
+             */
             static can(context, path, method) {
                 let allowed = [];
                 let denied = [];

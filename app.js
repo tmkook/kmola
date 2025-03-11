@@ -20,6 +20,7 @@ app.use(serve(folder.base('public')));
 const bodyparser = require('koa-bodyparser');
 app.use(bodyparser());
 
+//重新加载
 app.reload = function (path) {
     console.log('hotreload:', path);
     for (let file in require.cache) {

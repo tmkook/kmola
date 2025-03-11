@@ -3,6 +3,11 @@ const config = require('./config');
 const folder = require('./folder');
 let router = new koarouter(config.get('app.router'));
 
+/**
+ * 加载控制器对象
+ * @param {string} file 
+ * @returns {object}
+ */
 router.controller = function (file) {
     let classname = null;
     let type = typeof (file);
@@ -26,7 +31,12 @@ router.controller = function (file) {
     return classname;
 }
 
-//controller
+/**
+ * 加载控制器方法
+ * @param {string} file 
+ * @param {string} method 
+ * @returns 
+ */
 router.action = function (file, method) {
     return async function (context) {
         let classname = router.controller(file);
@@ -50,6 +60,13 @@ router.action = function (file, method) {
     }
 }
 
+/**
+ * 加载CRUD
+ * @param {string} name  
+ * @param {string} path 
+ * @param {function} middleware 
+ * @param {function} action 
+ */
 router.resource = function () {
     let name = null;
     let path = null;
@@ -84,7 +101,11 @@ router.resource = function () {
     router.delete(path, ...middleware, router.action(ctrl, 'delete'));
 }
 
-//middleware
+/**
+ * 加载中间件
+ * @param {string} func 
+ * @returns {function}
+ */
 router.next = function (func) {
     if (typeof (func) == 'string') {
         return require(folder.base('app/middlewares/' + func));

@@ -22,6 +22,11 @@ module.exports = new class secret {
         }
     }
 
+    /**
+     * 生成新的实例
+     * @param {string} key 
+     * @returns {object}
+     */
     instance(key) {
         return new secret(key);
     }
@@ -97,6 +102,11 @@ module.exports = new class secret {
         }
     }
 
+    /**
+     * 生成密码密文
+     * @param {string} str 
+     * @returns 
+     */
     password(str) {
         let md5 = this.crypto.MD5(str).toString();
         let key = md5.substring(0, 3) + md5.substring(11, 14) + md5.substring(22, 25) + md5.substring(29);

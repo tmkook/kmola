@@ -24,6 +24,10 @@ module.exports = class locale {
         }
     }
 
+    /**
+     * 设置语言
+     * @param {string} lang 
+     */
     set(lang) {
         if (folder.fs.existsSync(folder.base('resource/locales/' + lang))) {
             let locale = config.get('app.locale', { default: "en", key: "lang" });
@@ -31,6 +35,12 @@ module.exports = class locale {
         }
     }
 
+    /**
+     * 翻译
+     * @param {string} trans 
+     * @param {json} params 
+     * @returns {string}
+     */
     tr(trans, params) {
         this.init();
         let keys = trans.split('.');
