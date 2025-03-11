@@ -1,8 +1,8 @@
 module.exports = function (opt) {
     let options = {
-        session: 'web',
-        rolekey: "roles",
-        visible: ['id', 'roles', 'username'],
+        rolesKey: 'roles',
+        primaryKey: 'id',
+        sessionKey: 'web',
         permissions: {
             user: [
                 { path: "/.*", methods: "any", type: "allow" }
@@ -38,14 +38,14 @@ module.exports = function (opt) {
              */
             static login(context, user, remember = false) {
                 context.assert(user instanceof this, 'user invalid', 500);
-                user.setVisible(options.visible);
+                user.setVisible([options.primaryKey, options.rolesKey]);
                 let data = user.toData();
-                context.session[options.session] = data;
+                context.session[options.sessionKey] = data;
                 if (remember) {
                     const secret = require('./secret');
                     let exp = 86400 * 365;
                     let token = secret.encode(JSON.stringify(data), exp);
-                    context.cookies.set(options.session + '.token', token, { signed: true, maxAge: Date.now() + exp * 1000 });
+                    context.cookies.set(options.sessionKey + '.token', token, { signed: true, maxAge: Date.now() + exp * 1000 });
                 }
                 return true;
             }
@@ -55,19 +55,19 @@ module.exports = function (opt) {
              * @param {object} context 
              */
             static logout(context) {
-                context.session[options.session] = null;
-                delete context.session[options.session];
-                context.cookies.set(options.session + '.token', '', { signed: true, maxAge: -1 })
+                context.session[options.sessionKey] = null;
+                delete context.session[options.sessionKey];
+                context.cookies.set(options.sessionKey + '.token', '', { signed: true, maxAge: -1 })
             }
 
             /**
              * 获取登录信息
              * @param {object} context 
-             * @returns 
+             * @returns {json|undefined}
              */
             static auth(context) {
-                if (!context.session[options.session]) {
-                    let cookie = context.cookies.get(options.session + '.token', { signed: true });
+                if (!context.session[options.sessionKey]) {
+                    let cookie = context.cookies.get(options.sessionKey + '.token', { signed: true });
                     if (cookie) {
                         const secret = require('./secret');
                         let jwt = secret.decode(cookie);
@@ -76,23 +76,33 @@ module.exports = function (opt) {
                             let now = parseInt(Date.now() / 1000);
                             if (now - jwt.est > exp * 0.5) {
                                 let token = secret.encode(jwt.data, exp);
-                                context.cookies.set(options.session + '.token', token, { signed: true, maxAge: Date.now() + exp * 1000 });
+                                context.cookies.set(options.sessionKey + '.token', token, { signed: true, maxAge: Date.now() + exp * 1000 });
                             }
-                            context.session[options.session] = JSON.parse(jwt.data);
+                            context.session[options.sessionKey] = JSON.parse(jwt.data);
                         }
                     }
                 }
-                return context.session[options.session];
+                return context.session[options.sessionKey];
+            }
+
+            /**
+             * 获取登录用户模型
+             * @param {object} context 
+             * @returns {model}
+             */
+            async user(context) {
+                let info = this.auth(context);
+                return this.query().where(options.primaryKey, info[options.primaryKey]).first();
             }
 
             /**
              * 是否有角色
-             * @param {*} context 
-             * @param {*} role 
-             * @returns 
+             * @param {object} context 
+             * @param {string} role 
+             * @returns {bool}
              */
             static isRole(context, role) {
-                let key = options.rolekey;
+                let key = options.rolesKey;
                 let user = this.auth(context);
                 if (user && user[key]) {
                     let roles = user[key].split(',');

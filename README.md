@@ -47,7 +47,7 @@ provider 目录中包含  `bootstraps` 和 `commands` 两个文件夹。他们�
 `commands` 中的文件为所有自定义的 artisan 命令，这些文件可以使用 `make:command` 命令生成。
 
 # 路由
-路由通常都注册在 `routes` 文件夹，他们会在初始化时自动加载，`router` 继承自 <a href="https://github.com/koajs/router/blob/master/API.md">koa-router</a> 包。 kmola 只在此之上扩展了 `next` `action` `controller` `resource` 方法。
+路由通常都注册在 `routes` 文件夹，他们会在初始化时自动加载，`router` 继承自 <a href="https://github.com/koajs/router/blob/master/API.md">koa-router</a> 包。 kmola 只在此之上扩展了 `next` `action` `controller` 方法。
 ```
 const { router } = require('kmola');
 router.get('/',(context) => {
@@ -55,7 +55,7 @@ router.get('/',(context) => {
 });
 ```
 
-### Action 路由
+### 路由映射
 定义一个路由，映射到 `app/controllers/welcome_controller` 的 `index` 方法。
 ```
 router.get('/',router.action('welcome','index')) //控制器名称可忽略 _controller 后缀
@@ -65,30 +65,6 @@ router.get('/',router.action('welcome','index')) //控制器名称可忽略 _con
 ```
 router.get('/',router.action('example/welcome','index'))
 ```
-
-### Resource 路由
-kmola 的控制器基类提供了 `grid` `show` `create` `update` `form` `delete` 六个基础方法，你只需要在控制器属性中绑定模型即可定义一个 `resource` 路由。
-```
-const {controller} = require('kmola');
-const user = require('../models/user');
-module.exports = class user_controller extends controller{
-  model = user.query();
-}
-```
-
-定义 resource 路由
-```
-router.resource('/user',router.controller('user'))
-```
-
-| method | path | query | action | about |
-| --- | ---  | --- | --- | --- |
-| get | /user | {id,page,...} | grid | 获取分页 |
-| get | /user/:id | null | show | 获取一个 |
-| post | /user | {...} | create | 创建一个 |
-| put | /user/:id | {...} | udpate | 修改一个 |
-| put | /user | {id,...} | form | 创建或修改一个 |
-| delete | /user | {id} | delete | 删除一个或多个 |
 
 # 中间件
 中间件提供了一种方便的机制来检查和过滤进入应用程序的 HTTP 请求。例如，包含一个用于验证用户是否经过身份验证。如果用户未通过身份验证，中间件将阻止访问应用。 如果用户通过了身份验证，中间件将允许请求进一步进入应用程序。
@@ -131,12 +107,12 @@ router.get('/user/info',router.next('auth'),router.action('welcome','index'))
 ```
 
 # 验证器
-kmola 提供了一个简单的验证器，若要完成一个有效的登录授权功能，请先在 config 目录下创建一个名为 `userauth` 的验证器配置文件。
+kmola 提供了一个简单的验证器，若要完成一个有效的登录授权功能，请先在 `config` 目录下创建一个名为 `userauth` 的验证器配置文件。
 ```
 module.exports = {
-    session: 'user', // 会话的 key
-    rokekey: 'roles', // 存储角色的字段名
-    visible: ['id', 'roles', 'username', 'nickname'], // 会话存储的数据
+    rolesKey: 'roles', // 存储角色的字段名
+    primaryKey: 'id', //主键
+    sessionKey: 'user', // 会话的 key
     permissions: {
         user: [ //该角色拥有的权限
             { path: "/user/.*", methods: "any", type: "allow" }
@@ -199,6 +175,7 @@ module.exports = {
   "hello":"你好 :world。"
 }
 ```
+
 使用本地化
 ```
 { controller } = require('kmola')
@@ -209,6 +186,7 @@ module.exports = class welcome_controller extends controller{
   }
 }
 ```
+
 # 日志
 为了帮助您更多地了解应用程序中发生的事情，kmola 内置了一个 winston 的日志对象，允许您将日志记录到文件。具体的使用方法请查阅 <a href="https://github.com/winstonjs/winston">winston</a>
 ```

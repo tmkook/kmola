@@ -61,47 +61,6 @@ router.action = function (file, method) {
 }
 
 /**
- * 加载CRUD
- * @param {string} name  
- * @param {string} path 
- * @param {function} middleware 
- * @param {function} action 
- */
-router.resource = function () {
-    let name = null;
-    let path = null;
-    let ctrl = null;
-    let middleware = [];
-    let args = Object.values(arguments);
-    if (typeof (args[0]) == 'string' && typeof (args[1]) == 'string') {
-        name = args.shift();
-        path = args.shift();
-    } else {
-        path = args.shift();
-    }
-    for (let i in args) {
-        if (typeof (args[i]) == 'function') {
-            if (args[i].toString().startsWith('class')) {
-                ctrl = args[i];
-            } else {
-                middleware.push(args[i]);
-            }
-        }
-    }
-    if (name) {
-        router.get(name, path, ...middleware, router.action(ctrl, 'grid'));
-        router.get(name + '.id', path + '/:id', ...middleware, router.action(ctrl, 'show'));
-    } else {
-        router.get(path, ...middleware, router.action(ctrl, 'grid'));
-        router.get(path + '/:id', ...middleware, router.action(ctrl, 'show'));
-    }
-    router.put(path + '/:id', ...middleware, router.action(ctrl, 'update'));
-    router.post(path, ...middleware, router.action(ctrl, 'create'));
-    router.put(path, ...middleware, router.action(ctrl, 'form'));
-    router.delete(path, ...middleware, router.action(ctrl, 'delete'));
-}
-
-/**
  * 加载中间件
  * @param {string} func 
  * @returns {function}

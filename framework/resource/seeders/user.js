@@ -1,7 +1,6 @@
 /**
 |--------------------------------------------------------------------------
 | Model Seeder
-| Document https://fakerjs.dev/api/
 |--------------------------------------------------------------------------
 |
 */
@@ -12,8 +11,8 @@ module.exports = class seeder {
     factor() {
         return {
             roles: 'user',
-            username: 'jack',
-            nickname: 'jack',
+            username: 'test',
+            nickname: 'test',
             avatar: '/assets/img/logo.png',
             password: secret.password('123456'),
         };
